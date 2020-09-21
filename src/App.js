@@ -1,24 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,{ useState } from 'react';
+import NewBoxForm from './components/newBoxForm/NewBoxForm';
+import BoxList from './components/boxList/BoxList';
+
 import './App.css';
 
 function App() {
+  const [arrBoxes, setArrBoxes]=useState([])
+  
+  const addItem= (item) => {
+    setArrBoxes([
+      ...arrBoxes,
+      {
+        height: item.height,
+        width: item.width,
+        color: item.color,
+        id: Math.floor(Math.random()*1000000)
+      }
+    ])
+  }
+
+  const removeItem= (e) => {
+    const origin= Number(e.target.getAttribute('id'))
+    const filteredBoxes= arrBoxes.filter((box)=>{
+      return box.id !== origin ? box : null;
+    })
+    setArrBoxes([ ...filteredBoxes ])
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NewBoxForm
+        addItem={addItem}
+      ></NewBoxForm>
+      <BoxList 
+        arrBoxes={arrBoxes}
+        removeItem={removeItem}
+      ></BoxList>
     </div>
   );
 }
